@@ -1,0 +1,157 @@
+<!--
+ Copyright (c) 2014, 2024, Oracle and/or its affiliates.
+ Licensed under The Universal Permissive License (UPL), Version 1.0
+ as shown at https://oss.oracle.com/licenses/upl/
+ -->
+ <div class="oj-hybrid-padding">
+  <h1>Layout form Demo</h1>
+  <h1>Input Text Demo</h1>
+    <oj-c-input-text
+              id="text-input"
+              value="{{firstname}}"
+              label-hint="Enter First Name"
+              label-edge="inside"></oj-c-input-text>
+    <h3>
+      Hey ! <oj-bind-text value="[[firstname]]"></oj-bind-text>
+    </h3>
+    <oj-c-input-text
+              id="text-input"
+              value="{{username}}"
+              label-hint="Enter Username"
+              label-edge="inside"></oj-c-input-text>
+    <oj-c-input-text
+              id="text-input"
+              value="{{email}}"
+              label-hint="Enter Email"
+              label-edge="inside"></oj-c-input-text>
+    <oj-c-input-text
+              id="text-input"
+              value="{{address}}"
+              label-hint="Enter Address"
+              label-edge="inside"></oj-c-input-text>
+    <h1>Input Number Demo</h1>
+    <oj-c-input-number
+                value="{{salary}}"
+                label-hint="Enter Salary"
+                min="0"
+                step="0"></oj-c-input-number>
+    <h3>
+      Salary is <oj-bind-text value="[[salary]]"></oj-bind-text>
+    </h3>
+    <h1>Input Password Demo</h1>
+    <oj-c-input-password
+                value="{{password}}"
+                label-hint="Enter Password"
+                ></oj-c-input-password>
+    <h3>Password is <oj-bind-text value="[[password]]"></oj-bind-text></h3>
+    <h1>Input Date</h1>
+    <oj-c-input-date-text
+                          value = "{{date}}"
+                          label-hint="Enter Date">
+                        </oj-c-input-date-text>
+    <h3>Date is <oj-bind-text value="[[date]]"></oj-bind-text></h3>
+  </oj-c-form-layout>
+  <div>
+    <h1> Button Demo</h1>
+  <oj-c-button id="button1"
+                        on-oj-action="[[handleClick]]"
+                        disabled=" [[firstname() ==null || firstname().trim()==='']]"
+                        label="Submit"></oj-c-button>
+  </div>
+  <div id="sampleDemo" class="demo-padding demo-container">
+    <div id="componentDemoContent" style="width: 1px; min-width: 100%;">
+              
+      <oj-table
+        id="table"
+        aria-label="Departments Table"
+        accessibility.row-header="depName"
+        data="[[dataprovider]]"
+        selection-mode='{"row": "multiple", "column": "multiple"}'
+        dnd='{"reorder": {"columns": "enabled"}}'
+        scroll-policy="loadMoreOnScroll"
+        scroll-policy-options='{"fetchSize": 10}'
+        columns='[{"headerText": "Department Id", 
+                   "field": "DepartmentId",
+                   "headerClassName": "oj-sm-only-hide",
+                   "className": "oj-sm-only-hide",
+                   "resizable": "enabled",
+                   "id": "depId"},
+                  {"headerText": "Department Name", 
+                   "field": "DepartmentName",
+                   "resizable": "enabled",
+                   "id": "depName"},
+                  {"headerText": "Location Id", 
+                   "field": "LocationId",
+                   "headerClassName": "oj-sm-only-hide",
+                   "className": "oj-sm-only-hide",
+                   "resizable": "enabled",
+                   "id": "locId"},
+                  {"headerText": "Manager Id", 
+                   "field": "ManagerId",
+                   "resizable": "enabled",
+                   "id": "manId"},
+                  {"headerText": "Employee Count", 
+                   "field": "EmployeeCount",
+                   "headerClassName": "oj-md-down-hide",
+                   "className": "oj-md-down-hide",
+                   "resizable": "enabled",
+                   "id": "empCount"}]'
+        class="demo-table-container"></oj-table>
+      
+      
+      
+    </div>
+  </div>
+  </div>
+  <!-- ------------------------------------------------------------------------------------------------------ -->
+  <div class="oj-hybrid-padding">
+    <h1>Layout form Demo</h1>
+    <div class="oj-sm-margin-1x-bottom">Indeterminate Progress Bar</div>
+            <oj-c-progress-bar class="oj-sm-margin-4x-bottom demo-width" value="-1"></oj-c-progress-bar>
+            <div class="oj-sm-margin-1x-bottom">Determinate Progress Bar</div>
+            <oj-c-progress-bar
+              class="oj-sm-margin-4x-bottom demo-width"
+              id="progressBar"
+              value="{{progressValue}}"></oj-c-progress-bar>
+    <!-- <h1>Input Text Demo</h1> -->
+    <oj-c-form-layout  columns=2 >
+      <oj-c-input-text
+                id="text-input"
+                value="{{firstname}}"
+                label-hint="Enter First Name"
+                label-edge="inside"></oj-c-input-text>
+      <!-- <h3>
+        Hey ! <oj-bind-text value="[[firstname]]"></oj-bind-text>
+      </h3>            -->
+      <!-- <h1>Input Number Demo</h1> -->
+      <oj-c-input-number
+                  value="{{salary}}"
+                  label-hint="Enter Salary"
+                  min="0"
+                  step="0"></oj-c-input-number>
+      <!-- <h3>
+        Salary is <oj-bind-text value="[[salary]]"></oj-bind-text>
+      </h3>
+     -->
+      <!-- <h1>Input Password Demo</h1> -->
+      <oj-c-input-password
+                  value="{{password}}"
+                  label-hint="Enter Password"
+                  ></oj-c-input-password>
+      <!-- <h3>Password is <oj-bind-text value="[[password]]"></oj-bind-text></h3>             -->
+      <!-- <h1>Input Date</h1> -->
+      <oj-c-input-date-text
+                            value = "{{date}}"
+                            label-hint="Enter Date">
+                          </oj-c-input-date-text>
+      <!-- <h3>Date is <oj-bind-text value="[[date]]"></oj-bind-text></h3>    -->
+    </oj-c-form-layout>
+    <div>
+      <h1>Button</h1>
+      <oj-c-button id="button1" label="Submit"></oj-c-button>
+    </div>
+    <div>
+      <h4>Messages</h4>
+            <oj-c-message-banner data="[[pageMessages]]" type="page"></oj-c-message-banner>
+    </div>
+    </div>

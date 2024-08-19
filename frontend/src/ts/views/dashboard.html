@@ -1,0 +1,48 @@
+<!--
+ Copyright (c) 2014, 2024, Oracle and/or its affiliates.
+ Licensed under The Universal Permissive License (UPL), Version 1.0
+ as shown at https://oss.oracle.com/licenses/upl/
+ -->
+<div class="oj-hybrid-padding">
+  <h1>Registration Area</h1>
+  <div>
+      You can use this section to register a new customer, update or delete an existing one, and fetch details of the customers.
+  </div>
+  <div>
+    <h2>Register/Update Customer</h2>
+    <h3>Enter Customer Details</h3>
+    <oj-c-form-layout  columns=3>
+      <oj-c-input-text
+                id="text-input"
+                value="{{firstname}}"
+                label-hint="Enter First Name"
+                label-edge="inside"></oj-c-input-text>
+      <oj-c-input-text id="text-input" value="{{lastname}}" label-hint="Enter Last Name"
+                  label-edge="inside"></oj-c-input-text>
+      <oj-c-input-text id="text-input" value="{{gender}}" label-hint="Enter Gender"
+                  label-edge="inside"></oj-c-input-text>   
+                  <oj-c-input-text id="text-input" value="{{email}}" label-hint="Enter Email"
+                  label-edge="inside"></oj-c-input-text> 
+                  <oj-c-input-text id="text-input" value="{{mobile}}" label-hint="Enter Mobile No."
+                  label-edge="inside"></oj-c-input-text>      
+                  <oj-c-input-text id="text-input" value="{{loginid}}" label-hint="Enter Login Id"
+                  label-edge="inside"></oj-c-input-text> 
+                  <oj-c-input-text id="text-input" value="{{customerstatus}}" label-hint="Enter Customer Status"
+                  label-edge="inside"></oj-c-input-text>          
+    </oj-c-form-layout>
+    <oj-c-button id="button1" on-oj-action="[[handleClick]]" label="Submit"></oj-c-button>
+    <h4>Welcome to iNet Bank <oj-bind-text value="[[firstname]]"></oj-bind-text></h4>
+  </div>
+  <div>
+    <h2>Delete/Get details by Id</h2>
+    <oj-c-input-number
+                value="{{customerid}}"
+                label-hint="Enter Customer Id"
+                min="0"
+                step="0"></oj-c-input-number>
+    <oj-c-button id="button2" on-oj-action="[[getClick]]" label="Get"></oj-c-button>
+    <oj-c-button id="button3" on-oj-action="[[deleteClick]]" label="Delete"></oj-c-button>
+    <h4>Customer updated/deleted <oj-bind-text value="[[customerid]]"></oj-bind-text></h4>
+  </div>
+  <oj-c-button id="button4" on-oj-action="[[getAllClick]]" label="GetAllDetails"></oj-c-button>
+</div>
