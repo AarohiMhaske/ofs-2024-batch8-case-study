@@ -8,5 +8,5 @@ import com.ofss.main.domain.Login;
 public interface CustomerLoginService {
 	Login createNewLogin(Login login);
 	Login getLoginCreds(int login_id);
-	int validateLogin(int customerId, String password);
+	Login loginExisting(int loginId, String password);
 }

@@ -13,16 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ofss.main.domain.Login;
 import com.ofss.main.services.CustomerLoginService;
-import com.ofss.main.services.CustomerLoginServiceImpl;
 
-//url - http://localhost:8080/login/create
+//url - http://localhost:8080/login/existing
 
 @RequestMapping("login")
 @RestController
 public class CustomerLoginController {
 	
 	@Autowired
-	private CustomerLoginServiceImpl customerLoginService;
+	private CustomerLoginService customerLoginService;
 	
 	@PostMapping("create")
 	public Login createLogin(@RequestBody Login login) {
@@ -30,28 +29,28 @@ public class CustomerLoginController {
 	}
 	
     
-    @PostMapping("validate")
-    public ResponseEntity<String> validateLogin(@RequestParam int customerId, @RequestParam String password) {
-        int result = customerLoginService.validateLogin(customerId, password);
+	@PostMapping("existing")
+    public ResponseEntity<?> loginExisting(@RequestParam int loginId, @RequestParam String password) {
+        // Call the login service
+        Login login = customerLoginService.loginExisting(loginId, password);
 
-        switch (result) {
-            case CustomerLoginServiceImpl.SUCCESS:
-                return ResponseEntity.ok("Login successful!");
-            case CustomerLoginServiceImpl.CUSTOMER_NOT_FOUND:
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Customer not found.");
-            case CustomerLoginServiceImpl.LOGIN_STATUS_NEW:
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Account is new. Please complete initial setup.");
-            case CustomerLoginServiceImpl.LOGIN_STATUS_LOCKED:
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Account is locked.");
-            case CustomerLoginServiceImpl.LOGIN_ATTEMPTS_EXCEEDED:
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Maximum login attempts exceeded.");
-            case CustomerLoginServiceImpl.INVALID_PASSWORD:
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password.");
-            case CustomerLoginServiceImpl.UNKNOWN_ERROR:
-            default:
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unknown error occurred.");
+        if (login == null) {
+            // Handle case where login entry is not found
+            return ResponseEntity.status(404).body("Login entry not found.");
         }
-    }
+
+        // Handle various login statuses
+        switch (login.getLoginStatus()) {
+            case "NEW":
+                return ResponseEntity.ok("Account created. Please activate your account.");
+            case "LOCKED":
+                return ResponseEntity.status(403).body("Account is locked.");
+            case "ACTIVE":
+                return ResponseEntity.ok(login); // Return login details or success response
+            default:
+                return ResponseEntity.status(400).body("Unexpected login status.");
+        }
+	}
     
     @GetMapping("details/{login_id}")
     public Login getLoginDetails(@PathVariable int login_id) {

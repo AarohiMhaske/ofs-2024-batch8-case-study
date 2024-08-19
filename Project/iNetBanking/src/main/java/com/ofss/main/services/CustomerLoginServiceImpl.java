@@ -35,56 +35,50 @@ public class CustomerLoginServiceImpl implements CustomerLoginService {
 		return null;
 	}
 	
-	public static final int SUCCESS = 0;
-    public static final int CUSTOMER_NOT_FOUND = -1;
-    public static final int LOGIN_STATUS_NEW = -2;
-    public static final int LOGIN_STATUS_LOCKED = -3;
-    public static final int LOGIN_ATTEMPTS_EXCEEDED = -4;
-    public static final int INVALID_PASSWORD = -5;
-    public static final int UNKNOWN_ERROR = -6;
-	
-	@Transactional
-	public int validateLogin(int customerId, String password) {
-		try {
-            // Fetch the customer record
-            Customer customer = customerRegistrationRepository.findById(customerId)
-                    .orElse(null); // Use Optional to handle potential nulls
-
-            if (customer == null) {
-                return CUSTOMER_NOT_FOUND;
-            }
-
-            // Fetch the login details for the customer
-            Login login = customerLoginRepository.findByCustomerId(customer.getCustomerId());
-
-            if (login == null) {
-                return UNKNOWN_ERROR; // Or a more appropriate response
-            }
-
-            // Check login status and validate credentials
+	@Override
+    public Login loginExisting(int loginId, String password) {
+        // Fetch the login entry using loginId
+        Login login = customerLoginRepository.findByloginId(loginId);
+        if (login != null) {
+            // Check login status
             switch (login.getLoginStatus()) {
                 case "NEW":
-                    return LOGIN_STATUS_NEW;
+                    login.setLoginStatus("ACTIVE"); // or another appropriate status transition
+                    login.setLoginAttempts(0); // Reset attempts if needed
+                    customerLoginRepository.save(login);
+                    return login; // Return login details with updated status
                 case "LOCKED":
-                    return LOGIN_STATUS_LOCKED;
+                    // Handle locked status, e.g., returning a message or status code
+                    return login; // or throw an exception, or return an appropriate error message
                 case "ACTIVE":
-                    if (login.getLoginAttempts() >= 3) {
-                        return LOGIN_ATTEMPTS_EXCEEDED;
-                    }
-                    if (login.getPassword().equals(password)) {
-                        return SUCCESS;
+                    // Check if the login attempts are less than the allowed limit
+                    if (login.getLoginAttempts() < 3) {
+                        if (login.getPassword().equals(password)) {
+                            login.setLoginAttempts(0); // Reset attempts on successful login
+                            customerLoginRepository.save(login);
+                            return login; // Return login details for a successful login
+                        } else {
+                            // Increment login attempts
+                            login.setLoginAttempts(login.getLoginAttempts() + 1);
+                            if (login.getLoginAttempts() >= 3) {
+                                login.setLoginStatus("LOCKED");
+                            }
+                            customerLoginRepository.save(login);
+                            return login; // Return login details with updated attempts/status
+                        }
                     } else {
-                        // Increment login attempts
-                    	customerLoginRepository.incrementLoginAttemptsByLoginId(login.getLoginId());
-                        return INVALID_PASSWORD;
+                        // If attempts exceed the limit, return a LOCKED status
+                        login.setLoginStatus("LOCKED");
+                        customerLoginRepository.save(login);
+                        return login;
                     }
                 default:
-                    return UNKNOWN_ERROR;
+                    // Handle any other statuses or errors
+                    return login; // or throw an exception, or return an appropriate error message
             }
-        } catch (Exception e) {
-            // Log the exception for debugging purposes
-            e.printStackTrace();
-            return UNKNOWN_ERROR;
+        } else {
+            // Handle case where login entry is not found
+            return null; // or throw an exception, or return an appropriate error message
         }
     }
 }
